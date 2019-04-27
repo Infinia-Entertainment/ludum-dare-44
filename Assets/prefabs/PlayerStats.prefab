@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5040584605550750905
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5040584605550750907}
+  - component: {fileID: 5040584605550750904}
+  m_Layer: 0
+  m_Name: Player
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5040584605550750907
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5040584605550750905}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.4954422, y: 2.8512378, z: -17.616703}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5040584605550750904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5040584605550750905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a5e242f5b7a1cf42bdc153d58382221, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HeartBeat:
+    bar: {fileID: 0}
+    maxVal: 100
+    currentVal: 100
+  Oxygen:
+    bar: {fileID: 0}
+    maxVal: 100
+    currentVal: 100
+  Energy:
+    bar: {fileID: 0}
+    maxVal: 100
+    currentVal: 100
+  Biomass:
+    bar: {fileID: 0}
+    maxVal: 100
+    currentVal: 100
+  heartBeatAddition: 20
+  oxygenAddition: 15
+  heartBeatOxygenCost: 2
+  energyByOxygenRegenRate: 0.1
+  energyDepletionRate: 0.1
+  heartBeatDepletionRate: 0.1
+  biomasRegenerationRate: 3
+  energyGenerationAmount: 1
+  oxygenEnergyDepletionAmount: 1.75
+  energyDepletionAmount: 0.175
+  heartBeatDepletionAmount: 0.2
+  biomasRegenerationAmount: 1

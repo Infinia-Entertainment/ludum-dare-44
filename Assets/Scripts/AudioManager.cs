@@ -33,7 +33,6 @@ public class AudioManager : MonoBehaviour
         //Play the sound through its source
         s.source.Play();
 
-        Debug.Log(name + " is playing");
     }
     public Sound GetSound(string name)
     {

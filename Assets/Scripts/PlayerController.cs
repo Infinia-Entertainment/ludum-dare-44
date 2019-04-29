@@ -4,7 +4,8 @@ using UnityEngine;
 using Cinemachine;
 using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
-{
+{ 
+
     BiometricsManager bioManager;
     //Move
     public float energyMoveReduction = 0.1f;
@@ -31,18 +32,21 @@ public class PlayerController : MonoBehaviour
     bool hasEnergy = true;
     bool isAirbone = false;
     float rotationAngle;
-
+    bool isDead = false;
     public float delay = 3f;
     
     Vector2 initialPos;
     Rigidbody2D rb;
     CinemachineImpulseSource hurtImpulse;
     public CinemachineImpulseSource startImpulse;
+    public FilterManager filterManager;
 
     public SpriteRenderer sprite;
     public Animator animator;
 
     public AudioManager audioManager;
+
+    public GameObject youDiedText;
 
     public GameObject fireParticles;
     // Start is called before the first frame update
@@ -56,6 +60,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         bioManager = GetComponent<BiometricsManager>();
         hurtImpulse = GetComponent<CinemachineImpulseSource>();
+
     }
     private void Start()
     {
@@ -67,41 +72,49 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-            MoveHorizontally();
-        if (!hasEnergy)
+        if (!isDead)
         {
-            rb.velocity = new Vector2(rb.velocity.x/5, rb.velocity.y);
+            MoveHorizontally();
+            if (!hasEnergy)
+            {
+                rb.velocity = new Vector2(rb.velocity.x / 5, rb.velocity.y);
+            }
         }
     }
 
     private void FixedUpdate()
     {
-        Debug.Log("Energy " + bioManager.GetCurrentEnergyValue());
-        Debug.Log("Speed " + currentSpeed + " " + maxSpeed);
-        Debug.Log("Velocity " + currentJumpVelocity + " " + maxJumpVelocity);
-        if (bioManager.GetCurrentEnergyValue() <= 1)
+        if (!isDead)
         {
-            hasEnergy = false;
+            if (bioManager.GetCurrentEnergyValue() <= 1)
+            {
+                hasEnergy = false;
+            }
+            else if (bioManager.GetCurrentEnergyValue() > 0)
+            {
+                hasEnergy = true;
+            }
+            QuickerFall();
+            Jump();
         }
-        else if(bioManager.GetCurrentEnergyValue() > 0)
-        {
-            hasEnergy = true;
-        }
-        QuickerFall();
-        Jump();
     }
 
-    public void GetHurt(float dmg, bool shake = true)
+    public void GetHurt(float dmg, bool shake = true, bool deathSound = false)
     {
         if (shake)
         {
             hurtImpulse.GenerateImpulse();
         }
-        bioManager.ReduceBiomass(dmg);
-        if (bioManager.GetCurrentBiomassValue() <= 0)
+        if(audioManager.GetSound("Hit").source.isPlaying == false)
         {
-            SceneManager.LoadScene(0);
+            audioManager.Play("Hit");
+        }
+       
+        bioManager.ReduceBiomass(dmg);
+        bioManager.ReduceHeartBeat(dmg/2);
+        if (bioManager.GetCurrentBiomassValue() <= 0 && !isDead) 
+        {
+            StartCoroutine(Die());
         }
         animator.SetTrigger("Hurt");
     }
@@ -216,7 +229,6 @@ public class PlayerController : MonoBehaviour
             currentJumpVelocity = startJumpVelocity;
             jumpPoint.transform.localPosition = initialPos;
             rb.velocity = Vector2.zero;
-    
         }
         if (Input.GetButton("Jump") && !isJumping && !isAirbone && hasEnergy)
         {
@@ -256,7 +268,29 @@ public class PlayerController : MonoBehaviour
 
         return B;
     }
-
+    IEnumerator Die()
+    {
+        isDead = true;
+        rb.velocity = Vector2.zero;
+        Time.timeScale /= 2;
+        audioManager.Play("Die");
+        filterManager.DeathFilter();
+        audioManager.Play("HeartBeat");
+        foreach (Sound sound in audioManager.sounds)
+        {
+            if (sound.name != "Die" && sound.name != "HeartBeat")
+            {
+                sound.source.volume /= 4.5f;
+                sound.source.pitch -= 0.2f;
+            }
+        }
+        yield return new WaitForSeconds(0.2f);
+        youDiedText.SetActive(true);
+        
+        yield return new WaitForSeconds(5);
+        Time.timeScale *= 2;
+        SceneManager.LoadScene(0);
+    }
     IEnumerator EarthQuake()
     {
         yield return new WaitForSeconds(delay);

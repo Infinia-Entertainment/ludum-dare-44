@@ -6,6 +6,7 @@ public class Toxin : MonoBehaviour
 {
     public float timer = 4f;
     public float DoT = 0.05f;
+    public AudioManager audioManager;
     float counter;
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -13,9 +14,17 @@ public class Toxin : MonoBehaviour
         {
             PlayerController player = collision.GetComponent<PlayerController>();
             StartCoroutine(ApplyToxin(player));
+            audioManager.Play("HitWaste");
         }
     }
    
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            audioManager.Play("HitWaste");
+        }
+    }
     IEnumerator ApplyToxin(PlayerController player)
     {
         while(counter < timer)

@@ -60,9 +60,9 @@ TagManager:
   - name: Player
     uniqueID: 168180425
     locked: 0
-  - name: UI
-    uniqueID: 1410992157
-    locked: 0
   - name: EarthQuake
     uniqueID: 4002602921
+    locked: 0
+  - name: UI
+    uniqueID: 1410992157
     locked: 0

@@ -13,12 +13,16 @@ public class AnimatorFuncs : MonoBehaviour
     {
         animator.SetTrigger("Airbone");
     }
+    void LandingSound()
+    {
+        audioManager.Play("Landing");
+    }
+    void MovingSound()
+    {    
+        audioManager.Play("Moving");
+    }
     void JumpingSound()
     {
         audioManager.Play("Jumping");
-    }
-    void HitWasteSound()
-    {
-        audioManager.Play("WasteHit");
     }
 }

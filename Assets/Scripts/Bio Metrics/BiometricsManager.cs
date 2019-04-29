@@ -41,6 +41,12 @@ public class BiometricsManager : MonoBehaviour
     [SerializeField] private float biomasRegenerationAmount = 1;
     #endregion
 
+    [HideInInspector]
+    public bool heartPressed = false;
+    [HideInInspector]
+    public bool lungsPressed = false;
+    public float minHeartBeat = 10f;
+
     private void Awake()
     {
         HeartBeat.Initialize();
@@ -58,6 +64,18 @@ public class BiometricsManager : MonoBehaviour
 
     }
 
+    public float GetCurrentBiomassValue()
+    {
+        return Biomass.CurrentVal;
+    }
+    public float GetCurrentEnergyValue()
+    {
+        return Energy.CurrentVal;
+    }
+    public float GetCurrentHeartBeatValue()
+    {
+        return HeartBeat.CurrentVal;
+    }
     private IEnumerator HeartBeatDepletion()
     {
         while (true)
@@ -108,14 +126,20 @@ public class BiometricsManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.H))
+        if (HeartBeat.CurrentVal <= minHeartBeat)
+            WarnPlayer();
+        if (HeartBeat.CurrentVal <= 0)
+            KillPlayer();
+        if (heartPressed)
         {
             HeartBeat.CurrentVal += 10;
+            heartPressed = false;
         }
-        if (Input.GetKeyDown(KeyCode.O) && HeartBeat.CurrentVal > 0)
+        if (lungsPressed && HeartBeat.CurrentVal > 0)
         {
             HeartBeat.CurrentVal -= 1;
             Oxygen.CurrentVal += 10;
+            lungsPressed = false;
         }
 
     }
@@ -150,25 +174,31 @@ public class BiometricsManager : MonoBehaviour
         HeartBeat.CurrentVal += value;
     }
 
-    public void AddReduceOxygen(float value)
+    public void AddOxygen(float value)
     {
         Oxygen.CurrentVal += value;
     }
 
-    public void AddReduceEnergy(float value)
+    public void AddEnergy(float value)
     {
         Energy.CurrentVal += value;
     }
 
-    public void AddReduceBiomass(float value)
+    public void AddBiomass(float value)
     {
         Biomass.CurrentVal += value;
     }
     #endregion
     #endregion
 
+    public void WarnPlayer()
+    {
+        Debug.Log("Critical heart beat!");
+    }
     public void KillPlayer()
     {
-        Destroy(gameObject);
+        Debug.Log("Player died!");
     }
+
+
 }

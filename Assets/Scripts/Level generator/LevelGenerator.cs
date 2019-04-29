@@ -110,8 +110,6 @@ public class LevelGenerator : MonoBehaviour
             //Find distance of both combined
             nextUpperPieceYPosOffset = distanceCurrentLowerToVerticalNode + distanceNextUpperToNode;
 
-
-
             //Place the position of the block
             upperPieceObj.transform.position = new Vector3
                 (

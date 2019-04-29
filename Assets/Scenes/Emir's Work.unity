@@ -679,8 +679,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 189995842}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.46734735, y: 0.46734735, z: 0.46734735}
+  m_LocalPosition: {x: -0.09, y: -0.08, z: 0}
+  m_LocalScale: {x: 1.8519266, y: 1.8519266, z: 1.8519266}
   m_Children: []
   m_Father: {fileID: 6670954}
   m_RootOrder: 0
@@ -722,13 +722,12 @@ SpriteRenderer:
   m_SortingLayerID: -940400735
   m_SortingLayer: 3
   m_SortingOrder: 10
-  m_Sprite: {fileID: 5124101462773794513, guid: d2e6c1803eb9ea34cb79cdadc8788992,
-    type: 3}
+  m_Sprite: {fileID: 21300000, guid: d2e6c1803eb9ea34cb79cdadc8788992, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 9.75, y: 9.75}
+  m_Size: {x: 3.125, y: 3.75}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -1715,7 +1714,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330100711}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.8268833, y: 0, z: 0}
+  m_LocalPosition: {x: 1.8268831, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1978526457}
@@ -2513,7 +2512,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 509902893}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.197048, y: 0, z: 0}
+  m_LocalPosition: {x: 3.1970482, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1484695960}
@@ -10425,7 +10424,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2090143351}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.459507, y: -1.556, z: 0}
+  m_LocalPosition: {x: -0.45950675, y: -1.556, z: 0}
   m_LocalScale: {x: 0.82, y: 0.69694215, z: 1}
   m_Children:
   - {fileID: 269195217}
@@ -10931,6 +10930,31 @@ PrefabInstance:
       propertyPath: m_Follow
       value: 
       objectReference: {fileID: 105486026}
+    - target: {fileID: 289792695235933059, guid: 0f1dacbd5a0a6d34b9a05989b9dffa41,
+        type: 3}
+      propertyPath: m_LookAt
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 289792696130534158, guid: 0f1dacbd5a0a6d34b9a05989b9dffa41,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -14.799999
+      objectReference: {fileID: 0}
+    - target: {fileID: 289792696130534158, guid: 0f1dacbd5a0a6d34b9a05989b9dffa41,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -4.0099993
+      objectReference: {fileID: 0}
+    - target: {fileID: 289792695235933056, guid: 0f1dacbd5a0a6d34b9a05989b9dffa41,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -14.799999
+      objectReference: {fileID: 0}
+    - target: {fileID: 289792695235933056, guid: 0f1dacbd5a0a6d34b9a05989b9dffa41,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -4.0099993
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0f1dacbd5a0a6d34b9a05989b9dffa41, type: 3}
 --- !u!1001 &662571982912600028
@@ -11082,6 +11106,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AudioManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 3206847957141198085, guid: 7540fc754f7a7a64ab183fb46d520489,
+        type: 3}
+      propertyPath: sounds.Array.data[13].volume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3206847957141198085, guid: 7540fc754f7a7a64ab183fb46d520489,
+        type: 3}
+      propertyPath: sounds.Array.data[13].pitch
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3206847957141198085, guid: 7540fc754f7a7a64ab183fb46d520489,
+        type: 3}
+      propertyPath: sounds.Array.data[9].loop
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3206847957141198330, guid: 7540fc754f7a7a64ab183fb46d520489,
         type: 3}
@@ -11281,6 +11320,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 6267894377616632154, guid: 834faebabc31c5d43a63c008f36b47a0,
+        type: 3}
+      propertyPath: HeartBeat.bar
+      value: 
+      objectReference: {fileID: 1966845299}
+    - target: {fileID: 6267894377616632154, guid: 834faebabc31c5d43a63c008f36b47a0,
+        type: 3}
+      propertyPath: Oxygen.bar
+      value: 
+      objectReference: {fileID: 684867539}
+    - target: {fileID: 6267894377616632154, guid: 834faebabc31c5d43a63c008f36b47a0,
+        type: 3}
+      propertyPath: Energy.bar
+      value: 
+      objectReference: {fileID: 542375606}
+    - target: {fileID: 6267894377616632154, guid: 834faebabc31c5d43a63c008f36b47a0,
+        type: 3}
+      propertyPath: Biomass.bar
+      value: 
+      objectReference: {fileID: 1426207783}
     - target: {fileID: 6267894377011238004, guid: 834faebabc31c5d43a63c008f36b47a0,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -11356,26 +11415,6 @@ PrefabInstance:
       propertyPath: youDiedText
       value: 
       objectReference: {fileID: 2123560167}
-    - target: {fileID: 6267894377616632154, guid: 834faebabc31c5d43a63c008f36b47a0,
-        type: 3}
-      propertyPath: HeartBeat.bar
-      value: 
-      objectReference: {fileID: 1966845299}
-    - target: {fileID: 6267894377616632154, guid: 834faebabc31c5d43a63c008f36b47a0,
-        type: 3}
-      propertyPath: Oxygen.bar
-      value: 
-      objectReference: {fileID: 684867539}
-    - target: {fileID: 6267894377616632154, guid: 834faebabc31c5d43a63c008f36b47a0,
-        type: 3}
-      propertyPath: Energy.bar
-      value: 
-      objectReference: {fileID: 542375606}
-    - target: {fileID: 6267894377616632154, guid: 834faebabc31c5d43a63c008f36b47a0,
-        type: 3}
-      propertyPath: Biomass.bar
-      value: 
-      objectReference: {fileID: 1426207783}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 834faebabc31c5d43a63c008f36b47a0, type: 3}
 --- !u!4 &6282877764807673431 stripped

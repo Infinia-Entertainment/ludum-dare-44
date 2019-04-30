@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Emir's Work.unity
-    guid: 699a2bc1335cf5344ac1ebf6bc4e1067
+    path: Assets/Scenes/Game Scene.unity
+    guid: fe0a14d5ed3dcac4282a30022f41ec1f
   m_configObjects: {}

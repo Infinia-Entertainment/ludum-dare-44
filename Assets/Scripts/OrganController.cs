@@ -9,12 +9,10 @@ public class OrganController : MonoBehaviour
     public void HeartPressed()
     {
         bioManager.heartPressed = true;
-        Debug.Log("Heart clicked, animating...");
     }
 
     public void LungsPressed()
     {
         bioManager.lungsPressed = true;
-        Debug.Log("Lungs clicked, animating...");
     }
 }

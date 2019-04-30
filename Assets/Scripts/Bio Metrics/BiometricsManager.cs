@@ -13,8 +13,9 @@ public class BiometricsManager : MonoBehaviour
     private Stat Energy;
     [SerializeField]
     private Stat Biomass;
-
-
+    public AudioManager audioManager;
+    public bool isEscaping = false;
+    public bool initialized = false;
     #region Organ Addition
     [Header("button variables")]
     [SerializeField] private float heartBeatAddition = 20f;
@@ -46,7 +47,7 @@ public class BiometricsManager : MonoBehaviour
     [HideInInspector]
     public bool lungsPressed = false;
     public float minHeartBeat = 10f;
-
+    public float spamCount = 0;
     private void Awake()
     {
         HeartBeat.Initialize();
@@ -55,15 +56,61 @@ public class BiometricsManager : MonoBehaviour
         Biomass.Initialize();
     }
 
-    void Start()
+
+    private void FixedUpdate()
     {
-        StartCoroutine(EnergyGeneration());
-        StartCoroutine(EnergyDepletion());
-        StartCoroutine(HeartBeatDepletion());
-        StartCoroutine(BiomasRegeneration());
+        if(isEscaping == true && initialized == false)
+        {
+            initialized = true;
+            StartCoroutine(EnergyGeneration());
+            StartCoroutine(EnergyDepletion());
+            StartCoroutine(HeartBeatDepletion());
+            StartCoroutine(BiomasRegeneration());
+        }
 
+        Debug.Log(Energy.CurrentVal);
+        if(HeartBeat.CurrentVal <= 30f && !audioManager.GetSound("HeartBeat").source.isPlaying)
+        {          
+            audioManager.Play("HeartBeat");
+            DecreaseSounds();
+        }
+        else if(HeartBeat.CurrentVal > 30f && audioManager.GetSound("HeartBeat").source.isPlaying)
+        {
+            audioManager.GetSound("HeartBeat").source.Stop();
+            IncreaseSounds();
+        }
+
+        if (Energy.CurrentVal <= 30f && !audioManager.GetSound("Breathing").source.isPlaying)
+        {
+            audioManager.Play("Breathing");
+            DecreaseSounds();
+        }
+        else if (Energy.CurrentVal > 30f && audioManager.GetSound("Breathing").source.isPlaying)
+        {
+            audioManager.GetSound("Breathing").source.Stop();
+            IncreaseSounds();
+        }
     }
-
+    void DecreaseSounds()
+    {
+        foreach (Sound sound in audioManager.sounds)
+        {
+            if (sound.name != "Breathing" && sound.name != "Die" && sound.name != "HeartBeat")
+            {
+                sound.source.volume /= 3.5f;
+            }
+        }
+    }
+    void IncreaseSounds()
+    {
+        foreach (Sound sound in audioManager.sounds)
+        {
+            if (sound.name != "Breathing"&& sound.name != "Die" && sound.name != "HeartBeat")
+            {
+                sound.source.volume *= 3.5f;
+            }
+        }
+    }
     public float GetCurrentBiomassValue()
     {
         return Biomass.CurrentVal;
@@ -132,13 +179,14 @@ public class BiometricsManager : MonoBehaviour
             KillPlayer();
         if (heartPressed)
         {
-            HeartBeat.CurrentVal += 10;
+            spamCount++;
+            HeartBeat.CurrentVal += 15;
             heartPressed = false;
         }
         if (lungsPressed && HeartBeat.CurrentVal > 0)
         {
             HeartBeat.CurrentVal -= 1;
-            Oxygen.CurrentVal += 10;
+            Oxygen.CurrentVal += 20;
             lungsPressed = false;
         }
 

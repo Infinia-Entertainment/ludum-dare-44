@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.SceneManagement;
+using TMPro;
 public class PlayerController : MonoBehaviour
 { 
 
@@ -47,11 +48,17 @@ public class PlayerController : MonoBehaviour
     public AudioManager audioManager;
 
     public GameObject youDiedText;
-
+    public TMP_Text scoreText;
+    float score = 0;
+    public bool isEscape = false;
+    public bool isRunning = false;
     public GameObject fireParticles;
     // Start is called before the first frame update
     void Awake()
     {
+        isRunning = false;
+        isEscape = false;
+        scoreText.text = score.ToString();
         startJumpVelocity = maxJumpVelocity / 2;
         currentSpeed = maxSpeed;
         currentJumpVelocity = startJumpVelocity;
@@ -61,41 +68,59 @@ public class PlayerController : MonoBehaviour
         bioManager = GetComponent<BiometricsManager>();
         hurtImpulse = GetComponent<CinemachineImpulseSource>();
 
+
     }
     private void Start()
     {
-
-        StartCoroutine(EarthQuake()); 
+        audioManager.Play("MainMenu");
+        scoreText.gameObject.SetActive(false);
     }
-
+    public void Escaping()
+    {
+        isEscape = true;
+    }
 
     // Update is called once per frame
     void Update()
     {
-        if (!isDead)
+        if (isEscape)
         {
-            MoveHorizontally();
-            if (!hasEnergy)
+            if (!isRunning)
             {
-                rb.velocity = new Vector2(rb.velocity.x / 5, rb.velocity.y);
+                isRunning = true;
+                bioManager.isEscaping = true;
+                
+                StartCoroutine(IncreaseScore());
+                EarthQuake();
+            }
+            if (!isDead)
+            {
+                MoveHorizontally();
+                if (!hasEnergy)
+                {
+                    rb.velocity = new Vector2(rb.velocity.x / 5, rb.velocity.y);
+                }
             }
         }
     }
 
     private void FixedUpdate()
     {
-        if (!isDead)
+        if (isEscape)
         {
-            if (bioManager.GetCurrentEnergyValue() <= 1)
+            if (!isDead)
             {
-                hasEnergy = false;
+                if (bioManager.GetCurrentEnergyValue() <= 1)
+                {
+                    hasEnergy = false;
+                }
+                else if (bioManager.GetCurrentEnergyValue() > 0)
+                {
+                    hasEnergy = true;
+                }
+                QuickerFall();
+                Jump();
             }
-            else if (bioManager.GetCurrentEnergyValue() > 0)
-            {
-                hasEnergy = true;
-            }
-            QuickerFall();
-            Jump();
         }
     }
 
@@ -237,7 +262,17 @@ public class PlayerController : MonoBehaviour
             rb.velocity = Vector2.zero;
         }     
     }
-
+    IEnumerator IncreaseScore()
+    {
+        scoreText.gameObject.SetActive(true);
+        while (true)
+        {
+           
+            yield return new WaitForSeconds(0.25f);
+            score += 100;
+            scoreText.text = score.ToString();
+        }
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Liquid"))
@@ -280,20 +315,19 @@ public class PlayerController : MonoBehaviour
         {
             if (sound.name != "Die" && sound.name != "HeartBeat")
             {
-                sound.source.volume /= 4.5f;
+                sound.source.volume /= 2f;
                 sound.source.pitch -= 0.2f;
             }
         }
         yield return new WaitForSeconds(0.2f);
         youDiedText.SetActive(true);
         
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(3);
         Time.timeScale *= 2;
         SceneManager.LoadScene(0);
     }
-    IEnumerator EarthQuake()
+    void EarthQuake()
     {
-        yield return new WaitForSeconds(delay);
         StartCoroutine(PlayMusic());
         startImpulse.GenerateImpulse();
         StartCoroutine(PlayWarningSounds());
@@ -301,6 +335,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator PlayMusic()
     {
+        audioManager.GetSound("MainMenu").source.Stop();
         audioManager.Play("BattleStart");
         AudioSource battleStartSource = audioManager.GetSound("BattleStart").source;
         yield return new WaitUntil(()=> battleStartSource.isPlaying == false);

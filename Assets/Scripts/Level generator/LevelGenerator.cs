@@ -38,9 +38,13 @@ public class LevelGenerator : MonoBehaviour
     int currentPathEndIndexHeight;
     int lastPathEndIndexHeight;
 
+
+    List<GameObject> createdObj = new List<GameObject>();
+    Camera mainCamera;
+
     private void Awake()
     {
-
+        mainCamera = Camera.main;
         arrangement2DList.Add(new List<int>());
         arrangement2DList.Add(new List<int>());
 
@@ -50,16 +54,16 @@ public class LevelGenerator : MonoBehaviour
 
         currentLowerPieceObj = initialPiece;
         //IterateGeneratePathMap();
-
     }
 
 
 
     private void Start()
     {
+
         AssignNextLowerPiecePrefab();
 
-        for (int i = 0; i < 3 ; i++)
+        for (int i = 0; i < 20 ; i++)
         {
             #region Lower Piece
             //Instantiate the next lower piece
@@ -125,6 +129,19 @@ public class LevelGenerator : MonoBehaviour
 
             //IterateGeneratePathMap();
 
+            
+
+
+            createdObj.Add(lowerPieceObj);
+            createdObj.Add(upperPieceObj);
+
+            foreach (var piece in createdObj)
+            {
+                if (piece.transform.position.x < mainCamera.transform.position.x - mainCamera.pixelWidth / 2 - 200)
+                {
+                    createdObj.RemoveAt(createdObj.FindIndex(x => x == piece));
+                }
+            }
             //check for pieces that need to be destructed (from behind)
             //update Path Map (destroy last, create new)
             //destroy them
@@ -247,7 +264,7 @@ public class LevelGenerator : MonoBehaviour
     {
         do
         {
-            nextUpperPieceIndex = UnityEngine.Random.Range(0, lowerPieces.Length);
+            nextUpperPieceIndex = UnityEngine.Random.Range(0, upperPieces.Length);
         }
         while (currentUpperPieceIndex == nextUpperPieceIndex);
 

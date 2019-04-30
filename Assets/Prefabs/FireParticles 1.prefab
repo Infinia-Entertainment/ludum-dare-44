@@ -90,7 +90,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2dd86e57df5ce14b83ffe3dcbfd31f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioManager: {fileID: 0}
   damage: 1
 --- !u!1 &1240450655861131170
 GameObject:
@@ -695,7 +694,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 1000
+    maxNumParticles: 500
     size3D: 0
     rotation3D: 1
     gravityModifier:
@@ -4859,10 +4858,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ce6b802dac82894dabe0cbda5755048, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 7
-  startSpeed: 1
-  speedIncreaseFactor: 0.1
+  maxSpeed: 8
+  startSpeed: 1.5
+  speedIncreaseFactor: 0.05
   yieldTime: 1
+  currentSpeed: 0
   delay: 1
 --- !u!1 &8288272702750202048
 GameObject:

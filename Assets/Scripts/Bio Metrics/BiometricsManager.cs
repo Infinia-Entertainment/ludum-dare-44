@@ -70,29 +70,29 @@ public class BiometricsManager : MonoBehaviour
             StartCoroutine(EnergyDepletion());
             StartCoroutine(HeartBeatDepletion());
             StartCoroutine(BiomasRegeneration());
+        }
 
 
-            if (HeartBeat.CurrentVal <= 30f && !audioManager.GetSound("HeartBeat").source.isPlaying)
-            {
-                audioManager.Play("HeartBeat");
-                DecreaseSounds();
-            }
-            else if (HeartBeat.CurrentVal > 30f && audioManager.GetSound("HeartBeat").source.isPlaying)
-            {
-                audioManager.GetSound("HeartBeat").source.Stop();
-                IncreaseSounds();
-            }
+        if (HeartBeat.CurrentVal <= 30f && !audioManager.GetSound("HeartBeat").source.isPlaying)
+        {
+            audioManager.Play("HeartBeat");
+            DecreaseSounds();
+        }
+        else if (HeartBeat.CurrentVal > 30f && audioManager.GetSound("HeartBeat").source.isPlaying)
+        {
+            audioManager.GetSound("HeartBeat").source.Stop();
+            IncreaseSounds();
+        }
 
-            if (Energy.CurrentVal <= 30f && !audioManager.GetSound("Breathing").source.isPlaying)
-            {
-                audioManager.Play("Breathing");
-                DecreaseSounds();
-            }
-            else if (Energy.CurrentVal > 30f && audioManager.GetSound("Breathing").source.isPlaying)
-            {
-                audioManager.GetSound("Breathing").source.Stop();
-                IncreaseSounds();
-            }
+        if (Energy.CurrentVal <= 30f && !audioManager.GetSound("Breathing").source.isPlaying)
+        {
+            audioManager.Play("Breathing");
+            DecreaseSounds();
+        }
+        else if (Energy.CurrentVal > 30f && audioManager.GetSound("Breathing").source.isPlaying)
+        {
+            audioManager.GetSound("Breathing").source.Stop();
+            IncreaseSounds();
         }
     }
     void DecreaseSounds()
@@ -183,13 +183,13 @@ public class BiometricsManager : MonoBehaviour
             KillPlayer();
         if (heartPressed)
         {
-            HeartBeat.CurrentVal += 15;
+            HeartBeat.CurrentVal += heartBeatAddition;
             heartPressed = false;
         }
         if (lungsPressed && HeartBeat.CurrentVal > 0)
         {
             HeartBeat.CurrentVal -= 1;
-            Oxygen.CurrentVal += 20;
+            Oxygen.CurrentVal += oxygenAddition;
             lungsPressed = false;
         }
 

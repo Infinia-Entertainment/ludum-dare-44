@@ -6,7 +6,7 @@ public class Toxin : MonoBehaviour
 {
     public float timer = 4f;
     public float DoT = 0.05f;
-    public AudioManager audioManager;
+     AudioManager audioManager;
     float counter;
     private void Awake()
     {

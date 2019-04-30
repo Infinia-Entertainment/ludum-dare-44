@@ -54,12 +54,14 @@ public class PlayerController : MonoBehaviour
 
     public GameObject youDiedText;
     public TMP_Text scoreText;
+    public TMP_Text highestScoreText;
 
 
     PostProcessVolume volume;
     ColorGrading colorGrading;
     Vignette vignette;
     float score = 0;
+    float highestScore = 0;
     [HideInInspector]
     public bool hasEscaped = false;
     [HideInInspector]
@@ -83,6 +85,9 @@ public class PlayerController : MonoBehaviour
         volume = Camera.main.GetComponent<PostProcessVolume>();
         volume.profile.TryGetSettings(out colorGrading);
         volume.profile.TryGetSettings(out vignette);
+        highestScore = PlayerPrefs.GetFloat("HighestScore");
+        highestScoreText.text = highestScoreText.text + " " + ((int)highestScore).ToString();
+        
 
     }
     private void Start()
@@ -383,6 +388,8 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator Die()
     {
+        highestScore = score;
+        PlayerPrefs.SetFloat("HighestScore", highestScore);
         isDead = true;
         rb.velocity = Vector2.zero;
         Time.timeScale /= 2;

@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class DecreaseBiomass : MonoBehaviour
 {
-    public AudioManager audioManager;
+    AudioManager audioManager;
+
+    private void Awake()
+    {
+        audioManager = GameObject.FindObjectOfType<AudioManager>();
+    }
     public float damage = 1f;
     private void OnTriggerStay2D(Collider2D collision)
     {

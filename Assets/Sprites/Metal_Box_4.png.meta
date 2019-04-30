@@ -1,7 +1,10 @@
 fileFormatVersion: 2
 guid: 684313329f6ed9e478cae2b79196f522
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: -4396435534536674402
+    second: Metal_Box_4_0
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -40,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 0
   alignment: 0
@@ -50,7 +53,7 @@ TextureImporter:
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
-  spriteTessellationDetail: -1
+  spriteTessellationDetail: 0
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
@@ -93,9 +96,34 @@ TextureImporter:
     androidETC2FallbackOverride: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Metal_Box_4_0
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 261
+        width: 975
+        height: 976
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 100, y: 100, z: 100, w: 100}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d7f6913d7486874fa6e96125b4d8226
+      internalID: -4396435534536674402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
-    physicsShape: []
+    physicsShape:
+    - - {x: -487, y: -488}
+      - {x: -487, y: 487}
+      - {x: 488, y: 487}
+      - {x: 488, y: -488}
     bones: []
     spriteID: cf0f94dbc9cffac458bb9a02fe3a3857
     internalID: 0

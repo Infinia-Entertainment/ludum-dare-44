@@ -8,6 +8,11 @@ public class Toxin : MonoBehaviour
     public float DoT = 0.05f;
     public AudioManager audioManager;
     float counter;
+    private void Awake()
+    {
+        audioManager = GameObject.FindObjectOfType<AudioManager>();
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))

@@ -80,9 +80,6 @@ public class LevelGenerator : MonoBehaviour
             //Find distance of both combined
             nextLowerPieceXPosOffset = distanceCurrentLowerToNode + distanceNextLowerToNode;
 
-            Debug.Log(currentLowerPieceObj);
-            Debug.Log(currentLowerPieceObj.transform.position);
-
             //Place the position of the block
             lowerPieceObj.transform.position = new Vector3
                 (
@@ -223,9 +220,7 @@ public class LevelGenerator : MonoBehaviour
     #region Lower Piece Functions
     private void AssignCurrentLowerPiece(GameObject currentLowerPieceInput)
     {
-        Debug.Log(currentLowerPieceInput);
         currentLowerPieceObj = currentLowerPieceInput;
-        Debug.Log(currentLowerPieceObj);
     }
 
     private void AssignNextLowerPiecePrefab()

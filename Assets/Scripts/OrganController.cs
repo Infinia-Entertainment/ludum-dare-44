@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class OrganController : MonoBehaviour
 {
+   public PlayerController player;
     public BiometricsManager bioManager;
+
     //Button events
     public void HeartPressed()
     {
-        bioManager.heartPressed = true;
+        if (player.hasEscaped)
+        {
+            bioManager.heartPressed = true;
+        }
     }
 
     public void LungsPressed()
     {
-        bioManager.lungsPressed = true;
+        if (player.hasEscaped)
+        {
+            bioManager.lungsPressed = true;
+        }
+
     }
 }

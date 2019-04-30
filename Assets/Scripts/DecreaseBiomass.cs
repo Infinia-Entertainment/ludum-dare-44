@@ -15,7 +15,7 @@ public class DecreaseBiomass : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            collision.GetComponent<PlayerController>().GetHurt(damage, true);
+            collision.GetComponent<PlayerController>().GetHurt(damage, true, false, false);
         }
     }
 

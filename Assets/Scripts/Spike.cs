@@ -10,7 +10,7 @@ public class Spike : MonoBehaviour
         if (c.gameObject.CompareTag("Player"))
         {
             PlayerController player = c.gameObject.GetComponent<PlayerController>();
-            player.GetHurt(20, true, true);
+            player.GetHurt(20, true, true, true);
         }
     }
     // Update is called once per frame

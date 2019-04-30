@@ -10,7 +10,6 @@ public class FilterManager : MonoBehaviour
     [Tooltip("Profile when game is in normal state")]
     public PostProcessProfile normalProfile;
 
-    [Tooltip("Profile when game is in state of matrix")]
     public PostProcessProfile deathProfile;
 
     [Space(5)]
@@ -20,7 +19,8 @@ public class FilterManager : MonoBehaviour
     [HideInInspector]
     public bool transitionFinished; //Wether transition to the profile is fully completed
 
-    PostProcessVolume volume;
+    [HideInInspector]
+    public PostProcessVolume volume;
 
     //public static FilterManager instance; //Used for singletone
 
@@ -48,7 +48,6 @@ public class FilterManager : MonoBehaviour
     {
         transitionFinished = false;
         StartCoroutine(DecreaseWeight(deathProfile));
-        Debug.Log("Filter is changing to Spacetime_Mastermind");
     }
 
     IEnumerator DecreaseWeight(PostProcessProfile newProfile)

@@ -35,7 +35,7 @@ public class Toxin : MonoBehaviour
         while(counter < timer)
         {
             counter += Time.fixedDeltaTime;
-            player.GetHurt(DoT, false);
+            player.GetHurt(DoT, false, false, false);
             yield return new WaitForFixedUpdate();
         }
     }

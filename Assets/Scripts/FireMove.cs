@@ -9,7 +9,8 @@ public class FireMove : MonoBehaviour
     public float startSpeed = 0.1f;
     public float speedIncreaseFactor = 0.1f;
     public float yieldTime = 1f;
-    float currentSpeed;
+    [HideInInspector]
+    public float currentSpeed;
     public float delay = 4;
     // Start is called before the first frame update
     void Start()

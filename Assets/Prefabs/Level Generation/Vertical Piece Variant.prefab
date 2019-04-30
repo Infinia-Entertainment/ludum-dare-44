@@ -93,10 +93,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2397200354171051134, guid: 703dd685c42a4a04688e85b8f18eb224,
+    - target: {fileID: 4307600575651009690, guid: 703dd685c42a4a04688e85b8f18eb224,
         type: 3}
-      propertyPath: m_Name
-      value: Vertical Piece Variant
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8811987765495551577, guid: 703dd685c42a4a04688e85b8f18eb224,
         type: 3}
@@ -106,7 +106,7 @@ PrefabInstance:
     - target: {fileID: 8811987765495551577, guid: 703dd685c42a4a04688e85b8f18eb224,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 8811987765495551577, guid: 703dd685c42a4a04688e85b8f18eb224,
         type: 3}
@@ -152,6 +152,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2397200354171051134, guid: 703dd685c42a4a04688e85b8f18eb224,
+        type: 3}
+      propertyPath: m_Name
+      value: Vertical Piece Variant
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 703dd685c42a4a04688e85b8f18eb224, type: 3}

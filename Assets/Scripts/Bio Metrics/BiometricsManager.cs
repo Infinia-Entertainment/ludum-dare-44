@@ -240,11 +240,10 @@ public class BiometricsManager : MonoBehaviour
 
     public void WarnPlayer()
     {
-        Debug.Log("Critical heart beat!");
+
     }
     public void KillPlayer()
     {
-        Debug.Log("Player died!");
     }
 
 

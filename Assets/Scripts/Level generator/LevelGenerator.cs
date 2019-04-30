@@ -11,7 +11,7 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] public GameObject[] lowerPieces;
     [SerializeField] public GameObject[] upperPieces;
 
-    //Later there will be 3 types of pieces for upper abd lower
+    //(Fuck THIS BTW)Later there will be 3 types of pieces for upper abd lower
     // for which probably states are needed
 
     #region Lower Piece variables
@@ -42,6 +42,9 @@ public class LevelGenerator : MonoBehaviour
     List<GameObject> createdObj = new List<GameObject>();
     Camera mainCamera;
 
+    [SerializeField] private float levelDestructionOffset = 200;
+    [SerializeField] private float levelCreationOffset = 200;
+
     private void Awake()
     {
         mainCamera = Camera.main;
@@ -65,6 +68,33 @@ public class LevelGenerator : MonoBehaviour
 
         for (int i = 0; i < 20 ; i++)
         {
+            
+            //check for pieces that need to be destructed (from behind)
+            //update Path Map (destroy last, create new)
+            //destroy them
+        }
+
+        //Debug.Log(arrangement2DList);
+
+        //Debug.Log("Upper = " + String.Join("",
+        //     new List<int>(arrangement2DList[0])
+        //     .ConvertAll(i => i.ToString())
+        //     .ToArray()));
+
+        //Debug.Log("Lower = " + String.Join("",
+        //    new List<int>(arrangement2DList[1])
+        //    .ConvertAll(i => i.ToString())
+        //    .ToArray()));
+
+    }
+
+    private void Update()
+    {
+
+        if (currentLowerPieceObj.transform.position.x < mainCamera.transform.position.x + (mainCamera.orthographicSize / 2 + levelCreationOffset))
+        {
+
+
             #region Lower Piece
             //Instantiate the next lower piece
             var lowerPieceObj = Instantiate(lowerPieces[nextLowerPieceIndex], transform.position, Quaternion.identity);
@@ -79,9 +109,6 @@ public class LevelGenerator : MonoBehaviour
 
             //Find distance of both combined
             nextLowerPieceXPosOffset = distanceCurrentLowerToNode + distanceNextLowerToNode;
-
-            Debug.Log(currentLowerPieceObj);
-            Debug.Log(currentLowerPieceObj.transform.position);
 
             //Place the position of the block
             lowerPieceObj.transform.position = new Vector3
@@ -128,42 +155,22 @@ public class LevelGenerator : MonoBehaviour
             #endregion
 
             //IterateGeneratePathMap();
-
-            
-
-
+           
             createdObj.Add(lowerPieceObj);
             createdObj.Add(upperPieceObj);
 
-            foreach (var piece in createdObj)
+
+            for (int i = 0; i < createdObj.Count; i++)
             {
-                if (piece.transform.position.x < mainCamera.transform.position.x - mainCamera.pixelWidth / 2 - 200)
+                if (createdObj[i].transform.position.x < mainCamera.transform.position.x - (mainCamera.orthographicSize / 2 + levelDestructionOffset))
                 {
-                    createdObj.RemoveAt(createdObj.FindIndex(x => x == piece));
+                    Destroy (createdObj[i], 0.1f);
+                    createdObj.RemoveAt(createdObj.FindIndex(x => x == createdObj[i]));
+                    Debug.Log(i);
+                    Debug.Log(createdObj[i]);
                 }
             }
-            //check for pieces that need to be destructed (from behind)
-            //update Path Map (destroy last, create new)
-            //destroy them
         }
-
-        //Debug.Log(arrangement2DList);
-
-        //Debug.Log("Upper = " + String.Join("",
-        //     new List<int>(arrangement2DList[0])
-        //     .ConvertAll(i => i.ToString())
-        //     .ToArray()));
-
-        //Debug.Log("Lower = " + String.Join("",
-        //    new List<int>(arrangement2DList[1])
-        //    .ConvertAll(i => i.ToString())
-        //    .ToArray()));
-
-    }
-
-    private void Update()
-    {
-        
     }
 
     private void IterateGeneratePathMap()
@@ -223,9 +230,7 @@ public class LevelGenerator : MonoBehaviour
     #region Lower Piece Functions
     private void AssignCurrentLowerPiece(GameObject currentLowerPieceInput)
     {
-        Debug.Log(currentLowerPieceInput);
         currentLowerPieceObj = currentLowerPieceInput;
-        Debug.Log(currentLowerPieceObj);
     }
 
     private void AssignNextLowerPiecePrefab()
@@ -256,9 +261,7 @@ public class LevelGenerator : MonoBehaviour
     #endregion
 
     #region Upper Piece Functions
-    private void AssignCurrentUpperPiece()
-    {
-    }
+ 
 
     private void AssignNextUpperPiecePrefab()
     {

@@ -321,6 +321,7 @@ public class PlayerController : MonoBehaviour
         }
         yield return new WaitForSeconds(0.2f);
         youDiedText.SetActive(true);
+        youDiedText.GetComponent<TMP_Text>().text = youDiedText.GetComponent<TMP_Text>().text + " " + score.ToString();
         
         yield return new WaitForSeconds(3);
         Time.timeScale *= 2;

@@ -68,7 +68,6 @@ public class BiometricsManager : MonoBehaviour
             StartCoroutine(BiomasRegeneration());
         }
 
-        Debug.Log(Energy.CurrentVal);
         if(HeartBeat.CurrentVal <= 30f && !audioManager.GetSound("HeartBeat").source.isPlaying)
         {          
             audioManager.Play("HeartBeat");

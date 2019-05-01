@@ -351,7 +351,6 @@ public class PlayerController : MonoBehaviour
             if (xDifference > 0)
             {
                 score += xDifference * (scoreMultiplier + 10 * fireParticles.GetComponent<FireMove>().currentSpeed);
-                Debug.Log(score);
                 scoreText.text = ((int)score).ToString();
             }
         }

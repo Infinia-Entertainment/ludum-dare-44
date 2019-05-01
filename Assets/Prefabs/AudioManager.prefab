@@ -1,0 +1,136 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2943183723459357049
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2943183723459357063}
+  - component: {fileID: 2943183723459357048}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2943183723459357063
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2943183723459357049}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -13.457221, y: -3.8902152, z: 92.74805}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2943183723459357048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2943183723459357049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b79fa1b6dd6a0d4d9dc2a01010fd6b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: WarningStart
+    clip: {fileID: 8300000, guid: 0552249fd979d614097ef298b214df80, type: 3}
+    volume: 0.7
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: WarningLoop
+    clip: {fileID: 8300000, guid: 43d7ea459f85cfd4aa0da4ea44e7830d, type: 3}
+    volume: 0.7
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: Explosion
+    clip: {fileID: 8300000, guid: bae55fc394bfa654688962610803d034, type: 3}
+    volume: 0.125
+    pitch: 0.9
+    loop: 0
+    source: {fileID: 0}
+  - name: Moving
+    clip: {fileID: 8300000, guid: a5dc6d9076464864dabbfa78aa320376, type: 3}
+    volume: 0.35
+    pitch: 1.3
+    loop: 0
+    source: {fileID: 0}
+  - name: Jumping
+    clip: {fileID: 8300000, guid: 217367409f6779448acae0ebe46f77f6, type: 3}
+    volume: 0.35
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: HitWaste
+    clip: {fileID: 8300000, guid: 2a165b08ea94e69409ee6bb657c11ed8, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: BattleLoop
+    clip: {fileID: 8300000, guid: 61baf3a505152ba44a551c91a13710bd, type: 3}
+    volume: 0.8
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: BattleStart
+    clip: {fileID: 8300000, guid: bb338fd5acd079f4c942b5eeacb1cb0d, type: 3}
+    volume: 0.8
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Click
+    clip: {fileID: 8300000, guid: e09b729407f51ee49ad4e32b6f8565db, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: MainMenu
+    clip: {fileID: 8300000, guid: 05c5079e27f70c246a8e4aa96bea397e, type: 3}
+    volume: 0.8
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: Hit
+    clip: {fileID: 8300000, guid: 9c102118fb50e4b4085547a1fade3598, type: 3}
+    volume: 0.65
+    pitch: 1.3
+    loop: 0
+    source: {fileID: 0}
+  - name: Landing
+    clip: {fileID: 8300000, guid: 4c34765bf495d8a4cbe8e86588d00302, type: 3}
+    volume: 0.35
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: HeartBeat
+    clip: {fileID: 8300000, guid: ca2f36ce3d71287408f6cca1a9bc544a, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: Die
+    clip: {fileID: 8300000, guid: 0eded2e60f3b8d64ea2e142cd31c085a, type: 3}
+    volume: 0.5
+    pitch: 0.5
+    loop: 0
+    source: {fileID: 0}
+  - name: Breathing
+    clip: {fileID: 8300000, guid: 575a76d5a0aa32c4193e6afc61569116, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}

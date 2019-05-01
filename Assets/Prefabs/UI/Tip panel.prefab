@@ -751,13 +751,14 @@ MonoBehaviour:
   tipText: {fileID: 2212463367171995959}
   tipsArray:
   - Don't forget to turn on sounds to hear when your Energy and Heartbeat get low!
-  - By charging your jump a short time, you can make a short jump. these are useful
+  - By charging your jump a short time, you can make a short jump - these are useful
     in some cases.
-  - You can use the ramps(slopes) to gain some vertical velocity.
+  - Speed up using ramps(slopes) and at the same time you can control yourself in
+    air
   - When you touch a wall you can perform a "sticky jump" if you time your consequent
     jump correctly.
-  - You can add to your momentum if you jump straight after landing.
+  - You can speed up if you jump straight after landing.
   - If you slide from a higher place while holding jump, you can jump in mid air.
-  - 'Now you know everything i could teach you.
-
-    If you like the game, you can join our server for future updates.'
+  - Now you know the most I could teach you...  By the way, we are adding new features
+    to the game - join the server for updates!
+  hasEscaped: 0

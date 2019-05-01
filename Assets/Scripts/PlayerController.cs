@@ -60,7 +60,7 @@ public class PlayerController : MonoBehaviour
     public GameObject youDiedText;
     public TMP_Text scoreText;
     public TMP_Text highestScoreText;
-    public TipsGenerator tipsGen;
+    TipsGenerator tipsGen;
 
     PostProcessVolume volume;
     ColorGrading colorGrading;
@@ -77,6 +77,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        tipsGen = FindObjectOfType<TipsGenerator>();
         scoreText.text = score.ToString();
         startJumpVelocity = maxJumpVelocity / 2;
         currentSpeed = maxSpeed;
@@ -112,19 +113,25 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        xValue = Input.GetAxis("Horizontal");
-        if(Input.GetButtonUp("Jump"))
+        if (hasEscaped)
         {
-            releasedJump = true;
-            holdingJump = false;
-        }
-        if (Input.GetButtonDown("Jump"))
-        {
-            pressedJump = true;
-        }
-        if (Input.GetButton("Jump"))
-        {
-            holdingJump = true;
+            xValue = Input.GetAxis("Horizontal");
+            if (Input.GetButtonUp("Jump") && isJumping && !isAirbone)
+            {
+                releasedJump = true;
+            }
+            if (Input.GetButtonDown("Jump")  && !isJumping && !isAirbone && hasEnergy)
+            {
+                pressedJump = true;
+            }
+            if (Input.GetButton("Jump") && isJumping && !isAirbone && currentJumpVelocity < maxJumpVelocity)
+            {
+                holdingJump = true;
+            }
+            else
+            {
+                holdingJump = false;
+            }
         }
     }
     private void FixedUpdate()
@@ -143,9 +150,17 @@ public class PlayerController : MonoBehaviour
             if (!isDead)
             {
                 MoveHorizontally();
-                if (!hasEnergy)
+                if (!hasEnergy && rb.velocity.y == 0)
                 {
+
+
                     rb.velocity = new Vector2(rb.velocity.x / 5, rb.velocity.y);
+
+                }
+                else 
+                {
+                    rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y);
+
                 }
             }
         }
@@ -280,15 +295,16 @@ public class PlayerController : MonoBehaviour
 
     void JumpApply()
     {
-        if (releasedJump  && isJumping && !isAirbone)
+        if (releasedJump)
         {
+            releasedJump = false;
+            Debug.Log("Released");
             bioManager.ReduceEnergy(energyJumpReduction);
             animator.SetBool("IsJumping", true);
             arrow.SetActive(false);
             Vector3 jumpDir = Quaternion.AngleAxis(rotationAngle, Vector3.forward) * Vector3.right;
             rb.velocity = jumpDir * new Vector2(currentSpeed * airSpeedIncrease, currentJumpVelocity);
             isAirbone = true;
-            releasedJump = false;
 
         }
     }
@@ -315,8 +331,9 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (holdingJump && isJumping && !isAirbone && currentJumpVelocity < maxJumpVelocity)
+        if (holdingJump)
         {
+           
             rb.velocity = new Vector2(0, rb.velocity.y);
             arrow.SetActive(true);
             float proportionalConstant = minY + (maxY - minY) * ((currentJumpVelocity - startJumpVelocity) / maxJumpVelocity);
@@ -342,8 +359,9 @@ public class PlayerController : MonoBehaviour
             jumpPoint.transform.localPosition = initialPos;
             rb.velocity = Vector2.zero;
         }
-        if (pressedJump && !isJumping && !isAirbone && hasEnergy)
+        if (pressedJump)
         {
+            Debug.Log("Pressed");
             pressedJump = false;
             isJumping = true;
             inLiquid = false;

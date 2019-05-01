@@ -11,6 +11,7 @@ public class TipsGenerator : MonoBehaviour
     [TextArea()] [SerializeField] private string[] tipsArray;
     private int lastIndex = 0;
 
+    [HideInInspector]
     public bool hasEscaped = false;
 
     private void Awake()

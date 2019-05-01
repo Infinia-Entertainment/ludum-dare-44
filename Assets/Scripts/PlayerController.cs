@@ -296,7 +296,7 @@ public class PlayerController : MonoBehaviour
                 jumpPoint.transform.position = RotateByRadians(transform.position, jumpPoint.transform.position, -rotationSpeed * Time.fixedDeltaTime);
                 arrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotationAngle - 90));
             }
-            if (rotationAngle >= 25 && xValue > 0)
+            if (rotationAngle >= 20 && xValue > 0)
             {
                 jumpPoint.transform.position = RotateByRadians(transform.position, jumpPoint.transform.position, rotationSpeed * Time.fixedDeltaTime);
                 arrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotationAngle - 90));

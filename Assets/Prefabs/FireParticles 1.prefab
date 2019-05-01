@@ -4858,12 +4858,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ce6b802dac82894dabe0cbda5755048, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 8
-  startSpeed: 1.5
+  maxSpeed: 4
+  startSpeed: 1
   speedIncreaseFactor: 0.05
-  yieldTime: 1
+  yieldTime: 2
   currentSpeed: 0
-  delay: 1
+  delay: 0
 --- !u!1 &8288272702750202048
 GameObject:
   m_ObjectHideFlags: 0

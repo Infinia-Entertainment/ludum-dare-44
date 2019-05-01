@@ -60,7 +60,7 @@ public class PlayerController : MonoBehaviour
     public GameObject youDiedText;
     public TMP_Text scoreText;
     public TMP_Text highestScoreText;
-
+    public TipsGenerator tipsGen;
 
     PostProcessVolume volume;
     ColorGrading colorGrading;
@@ -106,6 +106,7 @@ public class PlayerController : MonoBehaviour
     public void Escaping()
     {
         hasEscaped = true;
+        tipsGen.hasEscaped = true;
     }
 
     // Update is called once per frame
@@ -400,6 +401,7 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator Die()
     {
+        tipsGen.IncreaseRunCount();
         if (score > highestScore)
         {
             highestScore = score;

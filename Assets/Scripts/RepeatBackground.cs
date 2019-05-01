@@ -27,7 +27,6 @@ public class RepeatBackground : MonoBehaviour
 
                 if (camRightXPos > objXPos)
                 {
-                    Debug.Log("Instantiating " + repeatObjects[i].gameObject.name);
                     Vector3 newPos = new Vector3(camRightXPos + xOffsets[i], repeatObjects[i].position.y, repeatObjects[i].position.z);
 
                     Transform inst = CreateAtPos(repeatObjects[i].gameObject, newPos, repeatObjects[i].parent);

@@ -99,6 +99,7 @@ public class AfterImage : MonoBehaviour
             //Reset the counter to 0 
             timeCounter = 0;
 
+
             //Increase the ID by 1 
             img_ID++;
         }

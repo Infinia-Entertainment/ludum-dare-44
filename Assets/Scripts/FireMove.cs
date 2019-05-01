@@ -22,7 +22,7 @@ public class FireMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.right * currentSpeed *Time.fixedDeltaTime);
+        transform.Translate(Vector3.right * currentSpeed *Time.deltaTime);
     }
     IEnumerator SpeedIncrease()
     {

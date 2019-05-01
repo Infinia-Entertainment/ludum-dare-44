@@ -33,6 +33,11 @@ public class PlayerController : MonoBehaviour
     bool isJumping = false;
     bool hasEnergy = true;
     bool isAirbone = false;
+
+    bool pressedJump = false;
+    bool holdingJump = false;
+    bool releasedJump = false;
+    float xValue = 0;
     float rotationAngle;
     bool isDead = false;
     public float delay = 3f;
@@ -106,6 +111,24 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        xValue = Input.GetAxis("Horizontal");
+        if(Input.GetButtonUp("Jump"))
+        {
+            releasedJump = true;
+            holdingJump = false;
+        }
+        if (Input.GetButtonDown("Jump"))
+        {
+            pressedJump = true;
+        }
+        if (Input.GetButton("Jump"))
+        {
+            holdingJump = true;
+        }
+    }
+    private void FixedUpdate()
+    {
+
         if (hasEscaped)
         {
             if (!isRunning)
@@ -125,9 +148,6 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-    }
-    private void FixedUpdate()
-    {
         if (hasEscaped)
         {
             if (!isDead)
@@ -162,7 +182,7 @@ public class PlayerController : MonoBehaviour
 
                 if (heartDeathDelayCounter < heartDeathDelay)
                 {
-                    heartDeathDelayCounter += Time.deltaTime;
+                    heartDeathDelayCounter += Time.fixedDeltaTime;
                 }
                 else if (heartDeathDelayCounter >= heartDeathDelay)
                 {
@@ -184,9 +204,7 @@ public class PlayerController : MonoBehaviour
                 vignette.intensity.value /= 1.5f;
             }
         }
-
     }
-
     public void GetHurt(float dmg, bool shake = true, bool deathSound = false, bool tempInvincibility = false)
     {
         if (!isInvincibile)
@@ -224,12 +242,11 @@ public class PlayerController : MonoBehaviour
 
         if (!isJumping)
         {
-
-            float xValue = Input.GetAxis("Horizontal");
             if (xValue != 0)
             {
                 bioManager.ReduceEnergy(energyMoveReduction);
             }
+
             rb.velocity = new Vector2(xValue * currentSpeed, rb.velocity.y);
 
             if (!animator.GetBool("IsRunning"))
@@ -262,7 +279,7 @@ public class PlayerController : MonoBehaviour
 
     void JumpApply()
     {
-        if (Input.GetButtonUp("Jump") && isJumping && !isAirbone)
+        if (releasedJump  && isJumping && !isAirbone)
         {
             bioManager.ReduceEnergy(energyJumpReduction);
             animator.SetBool("IsJumping", true);
@@ -270,6 +287,7 @@ public class PlayerController : MonoBehaviour
             Vector3 jumpDir = Quaternion.AngleAxis(rotationAngle, Vector3.forward) * Vector3.right;
             rb.velocity = jumpDir * new Vector2(currentSpeed * airSpeedIncrease, currentJumpVelocity);
             isAirbone = true;
+            releasedJump = false;
 
         }
     }
@@ -281,15 +299,8 @@ public class PlayerController : MonoBehaviour
     }
     void JumpControl()
     {
-        if (Input.GetButton("Jump") && isJumping && !isAirbone)
-        {
-            rb.velocity = new Vector2(0, rb.velocity.y);
-        }
-
         if (isJumping && !isAirbone)
         {
-
-            float xValue = Input.GetAxis("Horizontal");
             rotationAngle = ArcTangent(jumpPoint.transform.position, transform.position);
             if (rotationAngle <= 85 && xValue < 0)
             {
@@ -303,8 +314,9 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetButton("Jump") && isJumping && !isAirbone && currentJumpVelocity < maxJumpVelocity)
+        if (holdingJump && isJumping && !isAirbone && currentJumpVelocity < maxJumpVelocity)
         {
+            rb.velocity = new Vector2(0, rb.velocity.y);
             arrow.SetActive(true);
             float proportionalConstant = minY + (maxY - minY) * ((currentJumpVelocity - startJumpVelocity) / maxJumpVelocity);
             if (currentJumpVelocity + jumpForceIncrease != maxJumpVelocity)
@@ -329,8 +341,9 @@ public class PlayerController : MonoBehaviour
             jumpPoint.transform.localPosition = initialPos;
             rb.velocity = Vector2.zero;
         }
-        if (Input.GetButton("Jump") && !isJumping && !isAirbone && hasEnergy)
+        if (pressedJump && !isJumping && !isAirbone && hasEnergy)
         {
+            pressedJump = false;
             isJumping = true;
             inLiquid = false;
             rb.velocity = Vector2.zero;

@@ -44,14 +44,14 @@ public class BarScript : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		HandleBar ();
 	}
 
 	private void HandleBar () {
 		if (fillAmount != content.fillAmount)
 		{
-			content.fillAmount = Mathf.Lerp(content.fillAmount,fillAmount,Time.deltaTime * lerpSpeed);
+			content.fillAmount = Mathf.Lerp(content.fillAmount,fillAmount,Time.fixedDeltaTime * lerpSpeed);
 		}
 		if (lerpColors) 
 		{

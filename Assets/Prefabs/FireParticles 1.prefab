@@ -4859,9 +4859,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 4
-  startSpeed: 1
-  speedIncreaseFactor: 0.05
-  yieldTime: 2
+  startSpeed: 2
+  speedIncreaseFactor: 0.025
+  yieldTime: 3
   currentSpeed: 0
   delay: 0
 --- !u!1 &8288272702750202048

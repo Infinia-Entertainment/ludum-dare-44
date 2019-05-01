@@ -387,7 +387,10 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator Die()
     {
-        highestScore = score;
+        if (score > highestScore)
+        {
+            highestScore = score;
+        }
         PlayerPrefs.SetFloat("HighestScore", highestScore);
         isDead = true;
         rb.velocity = Vector2.zero;

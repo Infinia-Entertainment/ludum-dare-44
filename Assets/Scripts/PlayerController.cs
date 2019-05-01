@@ -390,8 +390,8 @@ public class PlayerController : MonoBehaviour
         if (score > highestScore)
         {
             highestScore = score;
+            PlayerPrefs.SetFloat("HighestScore", highestScore);
         }
-        PlayerPrefs.SetFloat("HighestScore", highestScore);
         isDead = true;
         rb.velocity = Vector2.zero;
         Time.timeScale /= 2;

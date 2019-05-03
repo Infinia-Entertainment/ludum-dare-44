@@ -177,6 +177,15 @@ public class BiometricsManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            heartPressed = true;
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            lungsPressed = true;
+        }
+
         if (HeartBeat.CurrentVal <= minHeartBeat)
             WarnPlayer();
         if (HeartBeat.CurrentVal <= 0)

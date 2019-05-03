@@ -34,9 +34,14 @@ public class PlayerController : MonoBehaviour
     bool hasEnergy = true;
     bool isAirbone = false;
 
-    bool pressedJump = false;
-    bool holdingJump = false;
-    bool releasedJump = false;
+    bool rightClick = false;
+    bool holdingLMouse = false;
+    bool releasedLMouse = false;
+
+    bool isTouchingObject = true;
+
+    Vector2 mousePos;
+
     float xValue = 0;
     float rotationAngle;
     bool isDead = false;
@@ -60,6 +65,7 @@ public class PlayerController : MonoBehaviour
     public GameObject youDiedText;
     public TMP_Text scoreText;
     public TMP_Text highestScoreText;
+
     TipsGenerator tipsGen;
 
     PostProcessVolume volume;
@@ -74,6 +80,17 @@ public class PlayerController : MonoBehaviour
     [HideInInspector]
     public bool isInvincibile = false;
     public GameObject fireParticles;
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log("isTouching");
+        isTouchingObject = true;
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        Debug.Log("detached");
+        isTouchingObject = false;
+    }
     // Start is called before the first frame update
     void Awake()
     {
@@ -116,22 +133,23 @@ public class PlayerController : MonoBehaviour
         if (hasEscaped)
         {
             xValue = Input.GetAxis("Horizontal");
-            if (Input.GetButtonUp("Jump") && isJumping && !isAirbone)
+            if (Input.GetMouseButtonUp(1) && isJumping && !isAirbone)
             {
-                releasedJump = true;
+                releasedLMouse = true;
             }
-            if (Input.GetButtonDown("Jump")  && !isJumping && !isAirbone && hasEnergy)
+            if (Input.GetMouseButtonDown(1) && !isJumping && !isAirbone && hasEnergy)
             {
-                pressedJump = true;
+                rightClick = true;
             }
-            if (Input.GetButton("Jump") && isJumping && !isAirbone && currentJumpVelocity < maxJumpVelocity)
+            if (Input.GetMouseButton(1) && isJumping && !isAirbone && currentJumpVelocity < maxJumpVelocity)
             {
-                holdingJump = true;
+                holdingLMouse = true;
             }
             else
             {
-                holdingJump = false;
+                holdingLMouse = false;
             }
+                mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
     }
     private void FixedUpdate()
@@ -152,8 +170,6 @@ public class PlayerController : MonoBehaviour
                 MoveHorizontally();
                 if (!hasEnergy && rb.velocity.y == 0)
                 {
-
-
                     rb.velocity = new Vector2(rb.velocity.x / 5, rb.velocity.y);
 
                 }
@@ -253,6 +269,7 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         isInvincibile = false;
     }
+
     void MoveHorizontally()
     {
 
@@ -295,10 +312,10 @@ public class PlayerController : MonoBehaviour
 
     void JumpApply()
     {
-        if (releasedJump)
+        if (releasedLMouse)
         {
-            releasedJump = false;
-            Debug.Log("Released");
+            isTouchingObject = false;
+            releasedLMouse = false;
             bioManager.ReduceEnergy(energyJumpReduction);
             animator.SetBool("IsJumping", true);
             arrow.SetActive(false);
@@ -316,24 +333,17 @@ public class PlayerController : MonoBehaviour
     }
     void JumpControl()
     {
-        if (isJumping && !isAirbone)
+        float tempAngle = ArcTangent(mousePos, transform.position);
+        
+        if (Mathf.Abs(tempAngle) > 15 && Mathf.Abs(tempAngle)<165)
         {
-            rotationAngle = ArcTangent(jumpPoint.transform.position, transform.position);
-            if (rotationAngle <= 85 && xValue < 0)
-            {
-                jumpPoint.transform.position = RotateByRadians(transform.position, jumpPoint.transform.position, -rotationSpeed * Time.fixedDeltaTime);
-                arrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotationAngle - 90));
-            }
-            if (rotationAngle >= 20 && xValue > 0)
-            {
-                jumpPoint.transform.position = RotateByRadians(transform.position, jumpPoint.transform.position, rotationSpeed * Time.fixedDeltaTime);
-                arrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotationAngle - 90));
-            }
+            rotationAngle = Mathf.Abs(tempAngle);
+            arrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotationAngle - 90));
         }
-
-        if (holdingJump)
+       
+        if (holdingLMouse)
         {
-           
+
             rb.velocity = new Vector2(0, rb.velocity.y);
             arrow.SetActive(true);
             float proportionalConstant = minY + (maxY - minY) * ((currentJumpVelocity - startJumpVelocity) / maxJumpVelocity);
@@ -349,7 +359,7 @@ public class PlayerController : MonoBehaviour
             }
 
         }
-        if (rb.velocity.y == 0 && isAirbone || inLiquid && isAirbone)
+        if (rb.velocity.y == 0  && isAirbone || isTouchingObject  && isAirbone  || inLiquid && isAirbone)
         {
             isAirbone = false;
             isJumping = false;
@@ -359,10 +369,9 @@ public class PlayerController : MonoBehaviour
             jumpPoint.transform.localPosition = initialPos;
             rb.velocity = Vector2.zero;
         }
-        if (pressedJump)
+        if (rightClick)
         {
-            Debug.Log("Pressed");
-            pressedJump = false;
+            rightClick = false;
             isJumping = true;
             inLiquid = false;
             rb.velocity = Vector2.zero;
@@ -403,20 +412,21 @@ public class PlayerController : MonoBehaviour
         return rotZ;
     }
 
-    public Vector2 RotateByRadians(Vector2 Center, Vector2 A, float angle)
-    {
-        //Move calculation to 0,0
-        Vector2 v = A - Center;
+    //public Vector2 RotateByRadians(Vector2 Center, Vector2 A, float angle)
+    //{
+    //    //Move calculation to 0,0
+    //    Vector2 v = A - Center;
 
-        //rotate x and y
-        float x = v.x * Mathf.Cos(angle) + v.y * Mathf.Sin(angle);
-        float y = v.y * Mathf.Cos(angle) - v.x * Mathf.Sin(angle);
+    //    //rotate x and y
+    //    float x = v.x * Mathf.Cos(angle) + v.y * Mathf.Sin(angle);
+    //    float y = v.y * Mathf.Cos(angle) - v.x * Mathf.Sin(angle);
 
-        //move back to center
-        Vector2 B = new Vector2(x, y) + Center;
+    //    //move back to center
+    //    Vector2 B = new Vector2(x, y) + Center;
 
-        return B;
-    }
+    //    return B;
+    //}
+    
     IEnumerator Die()
     {
         tipsGen.IncreaseRunCount();
@@ -441,7 +451,7 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         youDiedText.SetActive(true);
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
         Time.timeScale *= 2;
         SceneManager.LoadScene(0);
     }
@@ -451,7 +461,7 @@ public class PlayerController : MonoBehaviour
         startImpulse.GenerateImpulse();
         StartCoroutine(PlayWarningSounds());
     }
-
+    
     IEnumerator PlayMusic()
     {
         audioManager.GetSound("MainMenu").source.Stop();

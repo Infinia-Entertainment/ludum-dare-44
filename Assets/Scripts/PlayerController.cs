@@ -249,7 +249,6 @@ public class PlayerController : MonoBehaviour
         {
             if (stained)
             {
-                Debug.Log("Stained");
                 GameObject instance = Instantiate(bloodStain, transform.position, Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360))));
                 float scale = Random.Range(0.4f, 0.75f);
                 instance.transform.localScale = new Vector3(scale, scale, 0);
@@ -285,8 +284,7 @@ public class PlayerController : MonoBehaviour
     }
 
     void MoveHorizontally()
-    {
-        Debug.Log(isMoving);
+    { 
 
         if (xValue != 0)
         {
@@ -294,9 +292,9 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        if (!isJumping || isAirbone && xValue != 0)
+        if (!isJumping || isAirbone && isJumping && xValue != 0 || isJumping && !isAirbone)
         {
-            if (particlesPresent == false && isJumping && xValue != 0)
+            if (particlesPresent == false && isAirbone && xValue != 0)
             {
                 particlesPresent = true;
                 GameObject instace = Instantiate(changeDirEffects, transform.position, Quaternion.identity, parent);
@@ -306,7 +304,7 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector2(xValue * currentSpeed, rb.velocity.y);
         }
 
-        if (!isJumping)
+        if (!isAirbone)
         {
             if (!animator.GetBool("IsRunning"))
                 animator.SetBool("IsRunning", true);
@@ -373,7 +371,7 @@ public class PlayerController : MonoBehaviour
         if (holdingLMouse)
         {
 
-            rb.velocity = new Vector2(0, rb.velocity.y);
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y);
             arrow.SetActive(true);
             float proportionalConstant = minY + (maxY - minY) * ((currentJumpVelocity - startJumpVelocity) / maxJumpVelocity);
             if (currentJumpVelocity + jumpForceIncrease != maxJumpVelocity)

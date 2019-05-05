@@ -4819,6 +4819,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8638106901349008332}
+  - component: {fileID: -7575090032045501394}
   m_Layer: 0
   m_Name: OrganEffects
   m_TagString: Untagged
@@ -4841,3 +4842,15 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-7575090032045501394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8638106901349008331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 337e25eeb3a3a2f4182a63f346c04c8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

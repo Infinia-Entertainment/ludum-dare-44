@@ -10,11 +10,25 @@ public class Stat
 	private BarScript bar;
 	[SerializeField]
 	private float maxVal;
-	[SerializeField]
-	private float currentVal;
+    [SerializeField]
+    private float minVal = 0;
+    [SerializeField]
+    private float currentVal;
 
+    public float MinVal
+    {
+        get
+        {
+            return minVal;
+        }
+        set
+        {
+            this.minVal = value;
+            bar.MaxValue = maxVal;
+        }
+    }
 
-	public float MaxVal {
+    public float MaxVal {
 		get 
 		{
 			return maxVal;
@@ -40,6 +54,8 @@ public class Stat
 
 	public void Initialize() 
 	{
+        this.minVal = minVal;
 		this.MaxVal = maxVal;
 	}
+   
 }

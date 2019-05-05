@@ -234,8 +234,8 @@ public class PlayerController : MonoBehaviour
                 audioManager.Play("Hit");
             }
 
-            bioManager.ReduceBiomass(dmg);
-            bioManager.ReduceHeartBeat(dmg / 2);
+            bioManager.ChangeBiometric(BiometricsManager.VariableToChange.Biomass,BiometricsManager.TypeOfChange.Substraction,dmg,true);
+            bioManager.ChangeBiometric(BiometricsManager.VariableToChange.HeartBeat,BiometricsManager.TypeOfChange.Substraction,dmg/2,true);
             if (bioManager.GetCurrentBiomassValue() <= 0 && !isDead)
             {
                 StartCoroutine(Die());
@@ -260,7 +260,7 @@ public class PlayerController : MonoBehaviour
         {
             if (xValue != 0)
             {
-                bioManager.ReduceEnergy(energyMoveReduction);
+                bioManager.ChangeBiometric(BiometricsManager.VariableToChange.Energy,BiometricsManager.TypeOfChange.Substraction,energyMoveReduction/2,true);
             }
 
             rb.velocity = new Vector2(xValue * currentSpeed, rb.velocity.y);
@@ -298,8 +298,9 @@ public class PlayerController : MonoBehaviour
         if (releasedJump)
         {
             releasedJump = false;
-            Debug.Log("Released");
-            bioManager.ReduceEnergy(energyJumpReduction);
+
+            bioManager.ChangeBiometric(BiometricsManager.VariableToChange.HeartBeat, BiometricsManager.TypeOfChange.Substraction, energyJumpReduction / 2, true);
+
             animator.SetBool("IsJumping", true);
             arrow.SetActive(false);
             Vector3 jumpDir = Quaternion.AngleAxis(rotationAngle, Vector3.forward) * Vector3.right;
@@ -361,7 +362,7 @@ public class PlayerController : MonoBehaviour
         }
         if (pressedJump)
         {
-            Debug.Log("Pressed");
+
             pressedJump = false;
             isJumping = true;
             inLiquid = false;

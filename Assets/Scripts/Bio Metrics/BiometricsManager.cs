@@ -6,7 +6,7 @@ using UnityEngine;
 public class BiometricsManager : MonoBehaviour
 {
     [SerializeField]
-	private Stat HeartBeat;
+    private Stat HeartBeat;
     [SerializeField]
     private Stat Oxygen;
     [SerializeField]
@@ -44,12 +44,69 @@ public class BiometricsManager : MonoBehaviour
     [SerializeField] private float biomasRegenerationAmount = 1;
     #endregion
 
+
+    #region Spam Control
+    [Header("Times pressed to activate Spam Delay")]
+    [SerializeField] private int heartBeatSpamLimit;
+    [SerializeField] private int oxygenSpamLimit;
+    [SerializeField] private int energySpamLimit;
+    [SerializeField] private int biomassSpamLimit;
+
+    private int heartBeatSpamPressed = 0;
+    private int oxygenSpamPressed = 0;
+    private int energySpamPressed = 0;
+    private int biomassSpamPressed = 0;
+
+    private bool ishearbeatSpamDelayActive;
+    private bool isOxygenSpamDelayActive;
+    private bool isEnergySpamDelayActive;
+    private bool isBiomassSpamDelayActive;
+
+    [SerializeField] private float spamDelaytime;
+    [SerializeField] private float spamPressedCooldowntime;
+
+    #endregion
+
     [HideInInspector]
     public bool heartPressed = false;
     [HideInInspector]
     public bool lungsPressed = false;
     public float minHeartBeat = 10f;
-    public float spamCount = 0;
+
+
+    #region Properties
+    public float GetCurrentBiomassValue()
+    {
+        return Biomass.CurrentVal;
+    }
+    public float GetCurrentEnergyValue()
+    {
+        return Energy.CurrentVal;
+    }
+    public float GetCurrentHeartBeatValue()
+    {
+        return HeartBeat.CurrentVal;
+    }
+    #endregion
+
+    public enum VariableToChange
+    {
+        HeartBeat,
+        Oxygen,
+        Energy,
+        Biomass
+    }
+
+    public enum TypeOfChange
+    {
+        Addition,
+        Substraction,
+        Multiply,
+        Divide
+    }
+
+
+
     private void Awake()
     {
         HeartBeat.Initialize();
@@ -58,6 +115,13 @@ public class BiometricsManager : MonoBehaviour
         Biomass.Initialize();
         isEscaping = false;
         initialized = false;
+
+        //ButtonPressedCooldownContainer heartbeatCooldown = new ButtonPressedCooldownContainer(0, heartBeatSpamLimit);
+        //ButtonPressedCooldownContainer oxygenCooldown = new ButtonPressedCooldownContainer(0, heartBeatSpamLimit);
+        //ButtonPressedCooldownContainer energyCooldown = new ButtonPressedCooldownContainer(0, heartBeatSpamLimit);
+        //ButtonPressedCooldownContainer biomassCooldown = new ButtonPressedCooldownContainer(0, heartBeatSpamLimit);
+
+
     }
 
 
@@ -71,7 +135,6 @@ public class BiometricsManager : MonoBehaviour
             StartCoroutine(HeartBeatDepletion());
             StartCoroutine(BiomasRegeneration());
         }
-
 
         if (HeartBeat.CurrentVal <= 30f && !audioManager.GetSound("HeartBeat").source.isPlaying)
         {
@@ -109,24 +172,14 @@ public class BiometricsManager : MonoBehaviour
     {
         foreach (Sound sound in audioManager.sounds)
         {
-            if (sound.name != "Breathing"&& sound.name != "Die" && sound.name != "HeartBeat")
+            if (sound.name != "Breathing" && sound.name != "Die" && sound.name != "HeartBeat")
             {
                 sound.source.volume *= 3.5f;
             }
         }
     }
-    public float GetCurrentBiomassValue()
-    {
-        return Biomass.CurrentVal;
-    }
-    public float GetCurrentEnergyValue()
-    {
-        return Energy.CurrentVal;
-    }
-    public float GetCurrentHeartBeatValue()
-    {
-        return HeartBeat.CurrentVal;
-    }
+
+
     private IEnumerator HeartBeatDepletion()
     {
         while (true)
@@ -144,7 +197,7 @@ public class BiometricsManager : MonoBehaviour
         {
 
             Energy.CurrentVal -= energyDepletionAmount;
-            
+
             yield return new WaitForSeconds(energyDepletionRate);
         }
     }
@@ -177,78 +230,228 @@ public class BiometricsManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (HeartBeat.CurrentVal <= minHeartBeat)
-            WarnPlayer();
-        if (HeartBeat.CurrentVal <= 0)
-            KillPlayer();
         if (heartPressed)
         {
-            HeartBeat.CurrentVal += heartBeatAddition;
+            ChangeBiometric(VariableToChange.HeartBeat, TypeOfChange.Addition, heartBeatAddition);
             heartPressed = false;
         }
+
         if (lungsPressed && HeartBeat.CurrentVal > 0)
         {
-            HeartBeat.CurrentVal -= 1;
-            Oxygen.CurrentVal += oxygenAddition;
+            if (!ishearbeatSpamDelayActive)
+            {
+                ChangeBiometric(VariableToChange.HeartBeat, TypeOfChange.Substraction, 1, true);
+                ChangeBiometric(VariableToChange.Oxygen, TypeOfChange.Addition, oxygenAddition);
+            }
             lungsPressed = false;
         }
-
     }
 
     #region Change Biometrics
 
-    #region Reduce
-    public void ReduceHeartBeat(float value)
+    /// <summary>
+    /// Changes a bio stat the amount a way that is specified, also control spam for the variable change
+    /// </summary>
+    /// <param name="variable">The variable that needs to be changed)</param>
+    /// <param name="typeOfChange"> How it will be changed</param>
+    /// <param name="changeVar">Variable used for the change (note: if multiply is used, this is what you multiply by) </param>
+    /// <param name="ignoreSpamControl">A bool to ignore spam control if needed</param>
+    public void ChangeBiometric(VariableToChange variable, TypeOfChange typeOfChange, float changeVar, bool ignoreSpamControl = false)
     {
-        HeartBeat.CurrentVal -= value;
+
+
+        //ButtonPressedCooldownContainer buttonSpam = null;
+        Stat statToChange = AssignStat();
+        if (statToChange != null)
+        {
+            ChangeStat();
+        }
+        #region Local functions
+
+
+        //Assing the Stat that will be changed to the local Stat variable
+        Stat AssignStat()
+        {
+            switch (variable)
+            {
+                case VariableToChange.HeartBeat:
+                    if (!ishearbeatSpamDelayActive || !ignoreSpamControl)
+                    {
+                        //if (heartbeatCooldown.pressResetCor != null)
+                        //{
+                        //    StopCoroutine(heartbeatCooldown.pressResetCor);
+                        //}
+                        //heartbeatCooldown.pressResetCor =  StartCoroutine(heartbeatCooldown.PressReset(spamPressedCooldowntime,heartBeatSpamLimit));
+                        //if (heartbeatCooldown.hasReachedLimit == true)
+                        //{
+                        //    ishearbeatSpamDelayActive = true;
+                        //}
+                        //return HeartBeat;
+                    }
+                    else StartCoroutine(SpamCooldown(spamDelaytime, variable));
+                    break;
+                case VariableToChange.Oxygen:
+                    if (!isOxygenSpamDelayActive || !ignoreSpamControl)
+                    {
+                        //if (heartbeatCooldown.pressResetCor != null)
+                        //{
+                        //    StopCoroutine(heartbeatCooldown.pressResetCor);
+                        //}
+                        //StopCoroutine(oxygenCooldown.pressResetCor);
+                        //oxygenCooldown.pressResetCor = StartCoroutine(oxygenCooldown.PressReset(spamPressedCooldowntime,oxygenSpamLimit));
+                        //if (oxygenCooldown.hasReachedLimit == true)
+                        //{
+                        //    isOxygenSpamDelayActive = true;
+                        //}
+                        //return Oxygen;
+                    }
+                    else StartCoroutine(SpamCooldown(spamDelaytime, variable));
+                    break;
+                case VariableToChange.Energy:
+                    if (!isEnergySpamDelayActive || !ignoreSpamControl)
+                    {
+                        //Debug.Log(heartbeatCooldown);
+                        //if (heartbeatCooldown.pressResetCor != null)
+                        //{
+                        //    StopCoroutine(heartbeatCooldown.pressResetCor);
+                        //}
+                        //StopCoroutine(energyCooldown.pressResetCor);
+                        //energyCooldown.pressResetCor = StartCoroutine(energyCooldown.PressReset(spamPressedCooldowntime,energySpamLimit));
+                        //if (energyCooldown.hasReachedLimit == true)
+                        //{
+                        //    isEnergySpamDelayActive = true;
+                        //}
+                        //return Energy;
+                    }
+                    else StartCoroutine(SpamCooldown(spamDelaytime, variable));
+                    break;
+                case VariableToChange.Biomass:
+                    if (!isBiomassSpamDelayActive || !ignoreSpamControl)
+                    {
+                        //if (heartbeatCooldown.pressResetCor != null)
+                        //{
+                        //    StopCoroutine(heartbeatCooldown.pressResetCor);
+                        //}
+                        //StopCoroutine(biomassCooldown.pressResetCor);
+                        //biomassCooldown.pressResetCor = StartCoroutine(biomassCooldown.PressReset(spamPressedCooldowntime, biomassSpamLimit));
+                        //if (biomassCooldown.hasReachedLimit == true)
+                        //{
+                        //    isBiomassSpamDelayActive = true;
+                        //}
+                        return Biomass;
+                    }
+                    else StartCoroutine(SpamCooldown(spamDelaytime, variable));
+                    break;
+                default: return null;
+
+            }
+
+            return null;
+
+        }
+
+        //Applies the changes to the local Stat variable
+        void ChangeStat()
+        {
+            switch (typeOfChange)
+            {
+                case TypeOfChange.Addition:
+                    statToChange.CurrentVal += changeVar;
+                    break;
+                case TypeOfChange.Substraction:
+                    statToChange.CurrentVal -= changeVar;
+                    break;
+                case TypeOfChange.Multiply:
+                    statToChange.CurrentVal *= statToChange.MaxVal;
+                    break;
+                case TypeOfChange.Divide:
+                    statToChange.CurrentVal /= statToChange.MinVal;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        //Starts a delay when spamming
+        IEnumerator SpamCooldown(float spamDelay, VariableToChange variableToCheck)
+        {
+            Debug.Log("SpamDelayStarted");
+            switch (variableToCheck)
+            {
+                case VariableToChange.HeartBeat:
+
+                    ishearbeatSpamDelayActive = true;
+                    yield return new WaitForSeconds(spamDelaytime);
+                    ishearbeatSpamDelayActive = false;
+
+                    break;
+                case VariableToChange.Oxygen:
+
+                    isOxygenSpamDelayActive = true;
+                    yield return new WaitForSeconds(spamDelaytime);
+                    isOxygenSpamDelayActive = false;
+
+
+                    break;
+                case VariableToChange.Energy:
+
+                    isEnergySpamDelayActive = true;
+                    yield return new WaitForSeconds(spamDelaytime);
+                    isEnergySpamDelayActive = false;
+
+
+                    break;
+                case VariableToChange.Biomass:
+
+                    isBiomassSpamDelayActive = true;
+                    yield return new WaitForSeconds(spamDelaytime);
+                    isBiomassSpamDelayActive = false;
+
+
+                    break;
+                default: yield return null;
+                    break;
+
+
+            }
+
+        }
+
+        #endregion
     }
 
-    public void ReduceOxygen(float value)
-    {
-        Oxygen.CurrentVal -= value;
-    }
-
-    public void ReduceEnergy(float value)
-    {
-        Energy.CurrentVal -= value;
-    }
-
-    public void ReduceBiomass(float value)
-    {
-        Biomass.CurrentVal -= value;
-    }
     #endregion
+}
 
-    #region Add
-    public void AddHeartBeat(float value)
-    {
-        HeartBeat.CurrentVal += value;
-    }
+/// <summary>
+/// Contains a coroutine to acces the times pressed
+/// </summary>
+public class ButtonPressedCooldownContainer : MonoBehaviour
+{
+    public int timesPressed;
+    public bool hasReachedLimit;
+    public Coroutine pressResetCor;
 
-    public void AddOxygen(float value)
+    public ButtonPressedCooldownContainer(float cooldownTime, int buttonCooldownSpamLimit)
     {
-        Oxygen.CurrentVal += value;
-    }
-
-    public void AddEnergy(float value)
-    {
-        Energy.CurrentVal += value;
-    }
-
-    public void AddBiomass(float value)
-    {
-        Biomass.CurrentVal += value;
-    }
-    #endregion
-    #endregion
-
-    public void WarnPlayer()
-    {
-
-    }
-    public void KillPlayer()
-    {
+        StartCoroutine(PressReset(cooldownTime, buttonCooldownSpamLimit));
     }
 
 
+    public IEnumerator PressReset(float cooldownTime,int buttonCooldownSpamLimit)
+    {
+        timesPressed++;
+
+        if (timesPressed == buttonCooldownSpamLimit)
+        {
+            hasReachedLimit = true;
+        }
+        else
+        {
+            hasReachedLimit = false;
+            yield return new WaitForSeconds(cooldownTime);
+            timesPressed = 0;
+        }
+        
+    }
 }

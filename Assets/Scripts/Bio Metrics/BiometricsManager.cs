@@ -15,9 +15,11 @@ public class BiometricsManager : MonoBehaviour
     private Stat Biomass;
     public AudioManager audioManager;
     [HideInInspector]
-    public bool isEscaping = false;
+    public bool hasEscaped = false;
     [HideInInspector]
     public bool initialized = false;
+
+    public OrganFuncs organs;
     #region Organ Addition
     [Header("button variables")]
     [SerializeField] private float heartBeatAddition = 20f;
@@ -113,7 +115,7 @@ public class BiometricsManager : MonoBehaviour
         Oxygen.Initialize();
         Energy.Initialize();
         Biomass.Initialize();
-        isEscaping = false;
+        hasEscaped = false;
         initialized = false;
 
         //ButtonPressedCooldownContainer heartbeatCooldown = new ButtonPressedCooldownContainer(0, heartBeatSpamLimit);
@@ -122,12 +124,13 @@ public class BiometricsManager : MonoBehaviour
         //ButtonPressedCooldownContainer biomassCooldown = new ButtonPressedCooldownContainer(0, heartBeatSpamLimit);
 
 
+        lungsPressed = false;
     }
 
 
     private void FixedUpdate()
     {
-        if (isEscaping == true && initialized == false)
+        if (hasEscaped == true && initialized == false)
         {
             initialized = true;
             StartCoroutine(EnergyGeneration());
@@ -230,20 +233,34 @@ public class BiometricsManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (heartPressed)
+        if (hasEscaped)
         {
-            ChangeBiometric(VariableToChange.HeartBeat, TypeOfChange.Addition, heartBeatAddition);
-            heartPressed = false;
-        }
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                heartPressed = true;
+            }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                lungsPressed = true;
+            }
 
-        if (lungsPressed && HeartBeat.CurrentVal > 0)
-        {
-            if (!ishearbeatSpamDelayActive)
+            if (HeartBeat.CurrentVal <= minHeartBeat)
+                WarnPlayer();
+            if (HeartBeat.CurrentVal <= 0)
+                KillPlayer();
+            if (heartPressed)
+            {
+                ChangeBiometric(VariableToChange.HeartBeat, TypeOfChange.Addition, heartBeatAddition);
+                organs.HeartPressed();
+                heartPressed = false;
+            }
+            if (lungsPressed && HeartBeat.CurrentVal > 0)
             {
                 ChangeBiometric(VariableToChange.HeartBeat, TypeOfChange.Substraction, 1, true);
                 ChangeBiometric(VariableToChange.Oxygen, TypeOfChange.Addition, oxygenAddition);
+                organs.LungsPressed();
+                lungsPressed = false;
             }
-            lungsPressed = false;
         }
     }
 

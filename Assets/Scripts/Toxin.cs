@@ -5,6 +5,7 @@ using UnityEngine;
 public class Toxin : MonoBehaviour
 {
     public float timer = 4f;
+    public float yield = 0.25f;
     public float DoT = 0.05f;
      AudioManager audioManager;
     float counter;
@@ -32,11 +33,20 @@ public class Toxin : MonoBehaviour
     }
     IEnumerator ApplyToxin(PlayerController player)
     {
-        while(counter < timer)
+        counter = 0;
+        while (counter < timer)
+        {
+
+         
+            player.GetHurt(DoT, false, false, false, true);
+            yield return new WaitForSeconds(yield);
+        }
+    }
+    private void FixedUpdate()
+    {
+        if (counter < timer)
         {
             counter += Time.fixedDeltaTime;
-            player.GetHurt(DoT, false, false, false);
-            yield return new WaitForFixedUpdate();
         }
     }
 }

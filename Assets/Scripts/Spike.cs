@@ -8,7 +8,7 @@ public class Spike : MonoBehaviour
         if (c.gameObject.CompareTag("Player"))
         {
             PlayerController player = c.gameObject.GetComponent<PlayerController>();
-            player.GetHurt(damage, true, true);
+            player.GetHurt(damage, true, true, true, true);
         }
     
     }

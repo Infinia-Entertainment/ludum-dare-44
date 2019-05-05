@@ -244,10 +244,6 @@ public class BiometricsManager : MonoBehaviour
                 lungsPressed = true;
             }
 
-            if (HeartBeat.CurrentVal <= minHeartBeat)
-                WarnPlayer();
-            if (HeartBeat.CurrentVal <= 0)
-                KillPlayer();
             if (heartPressed)
             {
                 ChangeBiometric(VariableToChange.HeartBeat, TypeOfChange.Addition, heartBeatAddition);

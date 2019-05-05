@@ -340,7 +340,6 @@ public class PlayerController : MonoBehaviour
 
         if (releasedLMouse)
         {
-            releasedJump = false;
             Debug.Log("Released");
             bioManager.ChangeBiometric(BiometricsManager.VariableToChange.HeartBeat, BiometricsManager.TypeOfChange.Substraction, energyJumpReduction / 2, true);
             animator.SetBool("IsJumping", true);

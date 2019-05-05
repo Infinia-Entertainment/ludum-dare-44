@@ -262,8 +262,8 @@ public class PlayerController : MonoBehaviour
                 audioManager.Play("Hit");
             }
 
-            bioManager.ReduceBiomass(dmg);
-            bioManager.ReduceHeartBeat(dmg * 1.5f);
+            bioManager.ChangeBiometric(BiometricsManager.VariableToChange.Biomass,BiometricsManager.TypeOfChange.Substraction,dmg,true);
+            bioManager.ChangeBiometric(BiometricsManager.VariableToChange.HeartBeat,BiometricsManager.TypeOfChange.Substraction,dmg/2,true);
             if (bioManager.GetCurrentBiomassValue() <= 0 && !isDead)
             {
                 StartCoroutine(Die());
@@ -288,7 +288,7 @@ public class PlayerController : MonoBehaviour
 
         if (xValue != 0)
         {
-            bioManager.ReduceEnergy(energyMoveReduction);
+            bioManager.ChangeBiometric(BiometricsManager.VariableToChange.Energy, BiometricsManager.TypeOfChange.Substraction, energyMoveReduction / 2, true);
         }
 
 
@@ -340,9 +340,8 @@ public class PlayerController : MonoBehaviour
 
         if (releasedLMouse)
         {
-            isTouchingObject = false;
-            releasedLMouse = false;
-            bioManager.ReduceEnergy(energyJumpReduction);
+            Debug.Log("Released");
+            bioManager.ChangeBiometric(BiometricsManager.VariableToChange.HeartBeat, BiometricsManager.TypeOfChange.Substraction, energyJumpReduction / 2, true);
             animator.SetBool("IsJumping", true);
             arrow.SetActive(false);
             Vector3 jumpDir = Quaternion.AngleAxis(rotationAngle, Vector3.forward) * Vector3.right;

@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
     bool hasEnergy = true;
     bool isAirbone = false;
 
-    bool rightClick = false;
+    bool leftClick = false;
     bool holdingLMouse = false;
     bool releasedLMouse = false;
 
@@ -66,6 +66,10 @@ public class PlayerController : MonoBehaviour
     public TMP_Text scoreText;
     public TMP_Text highestScoreText;
 
+    public GameObject bloodStain;
+    public GameObject changeDirEffects;
+
+    public Transform parent;
     TipsGenerator tipsGen;
 
     PostProcessVolume volume;
@@ -80,16 +84,15 @@ public class PlayerController : MonoBehaviour
     [HideInInspector]
     public bool isInvincibile = false;
     public GameObject fireParticles;
-
+    bool isMoving;
+    bool particlesPresent = false;
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("isTouching");
         isTouchingObject = true;
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
-        Debug.Log("detached");
-        isTouchingObject = false;
+      isTouchingObject = false;
     }
     // Start is called before the first frame update
     void Awake()
@@ -133,15 +136,15 @@ public class PlayerController : MonoBehaviour
         if (hasEscaped)
         {
             xValue = Input.GetAxis("Horizontal");
-            if (Input.GetMouseButtonUp(1) && isJumping && !isAirbone)
+            if (Input.GetMouseButtonUp(0) && isJumping && !isAirbone)
             {
                 releasedLMouse = true;
             }
-            if (Input.GetMouseButtonDown(1) && !isJumping && !isAirbone && hasEnergy)
+            if (Input.GetMouseButtonDown(0) && !isJumping && !isAirbone && hasEnergy)
             {
-                rightClick = true;
+                leftClick = true;
             }
-            if (Input.GetMouseButton(1) && isJumping && !isAirbone && currentJumpVelocity < maxJumpVelocity)
+            if (Input.GetMouseButton(0) && isJumping && !isAirbone && currentJumpVelocity < maxJumpVelocity)
             {
                 holdingLMouse = true;
             }
@@ -160,7 +163,7 @@ public class PlayerController : MonoBehaviour
             if (!isRunning)
             {
                 isRunning = true;
-                bioManager.isEscaping = true;
+                bioManager.hasEscaped = true;
 
                 StartCoroutine(IncreaseScore());
                 EarthQuake();
@@ -236,11 +239,21 @@ public class PlayerController : MonoBehaviour
                 vignette.intensity.value /= 1.5f;
             }
         }
+
+
     }
-    public void GetHurt(float dmg, bool shake = true, bool deathSound = false, bool tempInvincibility = false)
+    public void GetHurt(float dmg, bool shake = true, bool deathSound = false, bool tempInvincibility = false, bool stained = false)
     {
+
         if (!isInvincibile)
         {
+            if (stained)
+            {
+                Debug.Log("Stained");
+                GameObject instance = Instantiate(bloodStain, transform.position, Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360))));
+                float scale = Random.Range(0.4f, 0.75f);
+                instance.transform.localScale = new Vector3(scale, scale, 0);
+            }
             if (shake)
             {
                 hurtImpulse.GenerateImpulse();
@@ -251,7 +264,7 @@ public class PlayerController : MonoBehaviour
             }
 
             bioManager.ReduceBiomass(dmg);
-            bioManager.ReduceHeartBeat(dmg / 2);
+            bioManager.ReduceHeartBeat(dmg * 1.5f);
             if (bioManager.GetCurrentBiomassValue() <= 0 && !isDead)
             {
                 StartCoroutine(Die());
@@ -265,34 +278,48 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator TempInvincibility()
     {
+        yield return new WaitForEndOfFrame();
         isInvincibile = true;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.65f);
         isInvincibile = false;
     }
 
     void MoveHorizontally()
     {
+        Debug.Log(isMoving);
+
+        if (xValue != 0)
+        {
+            bioManager.ReduceEnergy(energyMoveReduction);
+        }
+
+
+        if (!isJumping || isAirbone && xValue != 0)
+        {
+            if (particlesPresent == false && isJumping && xValue != 0)
+            {
+                particlesPresent = true;
+                GameObject instace = Instantiate(changeDirEffects, transform.position, Quaternion.identity, parent);
+                ParticleSystem particles = instace.GetComponentInChildren<ParticleSystem>();
+                particles.Play();
+            }
+            rb.velocity = new Vector2(xValue * currentSpeed, rb.velocity.y);
+        }
 
         if (!isJumping)
         {
-            if (xValue != 0)
-            {
-                bioManager.ReduceEnergy(energyMoveReduction);
-            }
-
-            rb.velocity = new Vector2(xValue * currentSpeed, rb.velocity.y);
-
             if (!animator.GetBool("IsRunning"))
                 animator.SetBool("IsRunning", true);
-            if (xValue < 0 && sprite.flipX == false)
-            {
-                sprite.flipX = true;
-            }
-            else if (xValue > 0 && sprite.flipX == true)
-            {
-                sprite.flipX = false;
-            }
         }
+        if (xValue < 0 && sprite.flipX == false)
+        {
+            sprite.flipX = true;
+        }
+        else if (xValue > 0 && sprite.flipX == true)
+        {
+            sprite.flipX = false;
+        }
+
 
         if (rb.velocity.x == 0)
         {
@@ -312,6 +339,7 @@ public class PlayerController : MonoBehaviour
 
     void JumpApply()
     {
+
         if (releasedLMouse)
         {
             isTouchingObject = false;
@@ -321,6 +349,7 @@ public class PlayerController : MonoBehaviour
             arrow.SetActive(false);
             Vector3 jumpDir = Quaternion.AngleAxis(rotationAngle, Vector3.forward) * Vector3.right;
             rb.velocity = jumpDir * new Vector2(currentSpeed * airSpeedIncrease, currentJumpVelocity);
+
             isAirbone = true;
 
         }
@@ -363,15 +392,17 @@ public class PlayerController : MonoBehaviour
         {
             isAirbone = false;
             isJumping = false;
+            particlesPresent = false;
             animator.SetBool("IsJumping", false);
             animator.SetTrigger("Land");
             currentJumpVelocity = startJumpVelocity;
             jumpPoint.transform.localPosition = initialPos;
             rb.velocity = Vector2.zero;
         }
-        if (rightClick)
+        if (leftClick)
         {
-            rightClick = false;
+ 
+            leftClick = false;
             isJumping = true;
             inLiquid = false;
             rb.velocity = Vector2.zero;
